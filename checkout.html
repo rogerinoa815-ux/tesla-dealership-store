@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roger Dealership – Checkout</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: #f0f0f0;
+    }
+ 
+    header {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 16px;
+    }
+ 
+    header h1 { font-size: 2rem; margin: 0; }
+    header p  { margin: 4px 0 0; font-style: italic; color: #ccc; }
+ 
+    /* ── MAIN LAYOUT ─────────────────────────── */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: white;
+      border: 1px solid #ccc;
+    }
+ 
+    /* ── LEFT PANEL – Order Summary ─────────── */
+    .summary-panel {
+      padding: 20px;
+      border-right: 1px solid #ccc;
+    }
+ 
+    .summary-panel h2 {
+      font-size: 1.1rem;
+      margin: 0 0 16px;
+      padding-bottom: 8px;
+      border-bottom: 1px solid #ccc;
+    }
+ 
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      font-size: .9rem;
+      margin-bottom: 10px;
+    }
+ 
+    .summary-item span:first-child { color: #555; }
+    .summary-item span:last-child  { font-weight: bold; }
+ 
+    .summary-divider {
+      border: none;
+      border-top: 1px solid #ccc;
+      margin: 12px 0;
+    }
+ 
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      font-size: 1rem;
+      font-weight: bold;
+      margin-top: 4px;
+    }
+ 
+    .summary-total span:last-child { color: #cc0000; }
+ 
+    .secure-badge {
+      margin-top: 20px;
+      padding: 10px 12px;
+      background: #f5f5f5;
+      border: 1px solid #ddd;
+      font-size: .82rem;
+      color: #555;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+ 
+    .secure-badge .lock { font-size: 1.1rem; }
+ 
+    /* ── CAR IMAGE ───────────────────────────── */
+    .car-image-wrap {
+      margin: 0 -20px 16px;   /* bleed to panel edges */
+      background: #111;
+      overflow: hidden;
+      border-bottom: 3px solid #cc0000;
+    }
+ 
+    .car-image-wrap img {
+      width: 100%;
+      display: block;
+      opacity: .92;
+      transition: opacity .3s;
+    }
+ 
+    .car-image-wrap img:hover { opacity: 1; }
+ 
+    .car-image-caption {
+      background: #222;
+      color: #ccc;
+      font-size: .78rem;
+      text-align: center;
+      padding: 5px 10px;
+      letter-spacing: .5px;
+    }
+ 
+    /* ── RIGHT PANEL – Payment Form ─────────── */
+    .payment-panel { padding: 20px; }
+ 
+    .payment-panel h2 {
+      text-align: center;
+      margin: 0 0 16px;
+      font-size: 1.2rem;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 8px;
+    }
+ 
+    .section-title {
+      font-weight: bold;
+      font-size: .95rem;
+      margin: 14px 0 8px;
+      color: #222;
+    }
+ 
+    /* card brand icons rendered in pure CSS */
+    .card-icons {
+      display: flex;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+ 
+    .card-icon {
+      padding: 3px 8px;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+      font-size: .75rem;
+      font-weight: bold;
+      background: #fff;
+      letter-spacing: .5px;
+    }
+ 
+    .card-icon.visa  { color: #1a1f71; }
+    .card-icon.mc    { color: #eb001b; }
+    .card-icon.amex  { color: #007bc1; }
+    .card-icon.disc  { color: #e65c00; }
+ 
+    /* form rows */
+    .field-row {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 12px;
+      flex-wrap: wrap;
+    }
+ 
+    .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      flex: 1;
+      min-width: 120px;
+    }
+ 
+    .field-group label {
+      font-size: .82rem;
+      font-weight: bold;
+      color: #333;
+    }
+ 
+    .field-group input {
+      font-size: .9rem;
+      padding: 6px 8px;
+      border: 1px solid #aaa;
+      width: 100%;
+      box-sizing: border-box;
+    }
+ 
+    .field-group input:focus {
+      outline: none;
+      border-color: #222;
+      box-shadow: 0 0 0 2px rgba(34,34,34,.15);
+    }
+ 
+    .field-group input.error {
+      border-color: #cc0000;
+    }
+ 
+    .field-hint {
+      font-size: .75rem;
+      color: #888;
+      margin-top: 2px;
+    }
+ 
+    /* billing checkbox */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: .88rem;
+      cursor: pointer;
+    }
+ 
+    .checkbox-row input[type="checkbox"] { cursor: pointer; }
+ 
+    /* billing address (shown/hidden) */
+    #billingAddress { display: none; }
+ 
+    /* submit */
+    .btn-row { text-align: center; margin-top: 18px; }
+ 
+    input[type="submit"] {
+      padding: 9px 32px;
+      font-size: 1rem;
+      cursor: pointer;
+      background: #222;
+      color: white;
+      border: none;
+      letter-spacing: .5px;
+      transition: background .2s;
+    }
+ 
+    input[type="submit"]:hover { background: #cc0000; }
+ 
+    /* success overlay */
+    #successOverlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,.55);
+      z-index: 999;
+      align-items: center;
+      justify-content: center;
+    }
+ 
+    #successOverlay.visible { display: flex; }
+ 
+    .success-box {
+      background: white;
+      border-top: 5px solid #222;
+      padding: 36px 40px;
+      text-align: center;
+      max-width: 380px;
+      width: 90%;
+    }
+ 
+    .success-box .check {
+      font-size: 3rem;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+ 
+    .success-box h3 {
+      margin: 0 0 8px;
+      font-size: 1.3rem;
+    }
+ 
+    .success-box p {
+      font-size: .9rem;
+      color: #555;
+      margin: 0 0 20px;
+      line-height: 1.6;
+    }
+ 
+    .success-box button {
+      padding: 8px 24px;
+      font-size: .95rem;
+      cursor: pointer;
+      background: #cc0000;
+      color: white;
+      border: none;
+    }
+ 
+    .success-box button:hover { background: #aa0000; }
+  </style>
+</head>
+<body>
+ 
+  <header>
+    <h1>ROGER DEALERSHIP</h1>
+    <p>The best Dealership ever.</p>
+  </header>
+ 
+  <div class="main-grid">
+ 
+    <!-- ── LEFT: Order Summary ──────────────── -->
+    <div class="summary-panel">
+      <!-- Car image -->
+      <div class="car-image-wrap">
+        <img src="tesla.car.png" alt="Tesla Model S" width="100px" height="300px"/>
+        <div class="car-image-caption">Tesla Model S — Roger Dealership Exclusive</div>
+      </div>
+ 
+      <h2>Order Summary</h2>
+ 
+      <div class="summary-item">
+        <span>Vehicle</span>
+        <span id="sum-model">–</span>
+      </div>
+      <div class="summary-item">
+        <span>Quantity</span>
+        <span id="sum-qty">–</span>
+      </div>
+      <div class="summary-item">
+        <span>Vehicle Cost</span>
+        <span id="sum-modelCost">–</span>
+      </div>
+      <div class="summary-item">
+        <span>Protection Plan</span>
+        <span id="sum-plan">–</span>
+      </div>
+ 
+      <hr class="summary-divider"/>
+ 
+      <div class="summary-item">
+        <span>Subtotal</span>
+        <span id="sum-subtotal">–</span>
+      </div>
+      <div class="summary-item">
+        <span>Tax (5%)</span>
+        <span id="sum-tax">–</span>
+      </div>
+ 
+      <hr class="summary-divider"/>
+ 
+      <div class="summary-total">
+        <span>Total Due</span>
+        <span id="sum-total">–</span>
+      </div>
+ 
+      <div class="secure-badge">
+        <span class="lock">🔒</span>
+        <span>All transactions are encrypted and processed securely. Roger Dealership never stores your card details.</span>
+      </div>
+    </div>
+ 
+    <!-- ── RIGHT: Payment Form ──────────────── -->
+    <div class="payment-panel">
+      <h2>Payment Details</h2>
+ 
+      <form id="checkoutForm" novalidate>
+ 
+        <!-- Card icons -->
+        <div class="card-icons">
+          <span class="card-icon visa">VISA</span>
+          <span class="card-icon mc">MC</span>
+          <span class="card-icon amex">AMEX</span>
+          <span class="card-icon disc">DISC</span>
+        </div>
+ 
+        <!-- Cardholder name -->
+        <div class="section-title">Cardholder Information</div>
+ 
+        <div class="field-row">
+          <div class="field-group">
+            <label for="firstName">First Name</label>
+            <input type="text" id="firstName" placeholder="John" autocomplete="given-name"/>
+          </div>
+          <div class="field-group">
+            <label for="lastName">Last Name</label>
+            <input type="text" id="lastName" placeholder="Smith" autocomplete="family-name"/>
+          </div>
+        </div>
+ 
+        <!-- Card number -->
+        <div class="section-title">Card Details</div>
+ 
+        <div class="field-row">
+          <div class="field-group">
+            <label for="cardNumber">Card Number</label>
+            <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456"
+                   maxlength="19" autocomplete="cc-number"/>
+          </div>
+        </div>
+ 
+        <div class="field-row">
+          <div class="field-group">
+            <label for="expiry">Expiry Date</label>
+            <input type="text" id="expiry" placeholder="MM / YY"
+                   maxlength="7" autocomplete="cc-exp"/>
+          </div>
+          <div class="field-group">
+            <label for="cvv">CVV</label>
+            <input type="text" id="cvv" placeholder="123"
+                   maxlength="4" autocomplete="cc-csc"/>
+            <span class="field-hint">3 digits on back (4 for Amex)</span>
+          </div>
+        </div>
+ 
+        <!-- Billing address -->
+        <div class="section-title">Billing Address</div>
+ 
+        <label class="checkbox-row">
+          <input type="checkbox" id="sameAddress" checked/>
+          Same as vehicle delivery address
+        </label>
+ 
+        <div id="billingAddress">
+          <div class="field-row">
+            <div class="field-group">
+              <label for="street">Street Address</label>
+              <input type="text" id="street" placeholder="123 Main St" autocomplete="street-address"/>
+            </div>
+          </div>
+          <div class="field-row">
+            <div class="field-group">
+              <label for="city">City</label>
+              <input type="text" id="city" placeholder="Springfield" autocomplete="address-level2"/>
+            </div>
+            <div class="field-group" style="max-width:90px;">
+              <label for="state">State</label>
+              <input type="text" id="state" placeholder="AL" maxlength="2" autocomplete="address-level1"/>
+            </div>
+            <div class="field-group" style="max-width:110px;">
+              <label for="zip">ZIP Code</label>
+              <input type="text" id="zip" placeholder="35601" maxlength="5" autocomplete="postal-code"/>
+            </div>
+          </div>
+        </div>
+ 
+        <!-- Submit -->
+        <div class="btn-row">
+          <input type="submit" value="Confirm Purchase"/>
+        </div>
+ 
+      </form>
+    </div>
+ 
+  </div>
+ 
+  <!-- ── SUCCESS OVERLAY ───────────────────── -->
+  <div id="successOverlay">
+    <div class="success-box">
+      <div class="check">✅</div>
+      <h3>Order Confirmed!</h3>
+      <p>
+        Thank you for your purchase.<br/>
+        Your Tesla is on its way.<br/>
+        A confirmation receipt has been sent to your email.
+      </p>
+      <button onclick="window.location.href='homeword.html'">Back to Store</button>
+    </div>
+  </div>
+ 
+  <script src="checkout.js"></script>
+</body>
+</html>

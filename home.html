@@ -1,0 +1,208 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Roger Dealership – Tesla Order</title>
+  <script src="Javascript.js"></script>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 30px;
+      background: #f0f0f0;
+    }
+ 
+    header {
+      background: #222;
+      color: white;
+      text-align: center;
+      padding: 16px;
+    }
+ 
+    header h1 { font-size: 2rem; margin: 0; }
+    header p  { margin: 4px 0 0; font-style: italic; color: #ccc; }
+ 
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: white;
+      border: 1px solid #ccc;
+    }
+ 
+    .product-info {
+      padding: 20px;
+      border-right: 1px solid #ccc;
+    }
+ 
+    .product-info h2 { font-size: 1.1rem; margin: 0 0 4px; }
+    .product-info a  { color: #cc0000; }
+    .stars           { color: goldenrod; }
+    .product-info p  { font-size: .9rem; margin-top: 10px; line-height: 1.6; }
+ 
+    .order-form { padding: 20px; }
+ 
+    .order-form h2 {
+      text-align: center;
+      margin: 0 0 16px;
+      font-size: 1.2rem;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 8px;
+    }
+ 
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+    }
+ 
+    label { font-size: .9rem; font-weight: bold; }
+ 
+    select, input[type="text"] {
+      font-size: .9rem;
+      padding: 4px 6px;
+      border: 1px solid #aaa;
+    }
+ 
+    input[readonly] { background: #e8e8e8; }
+ 
+    .section-title {
+      font-weight: bold;
+      font-size: .95rem;
+      margin-bottom: 8px;
+    }
+ 
+    .plan-option {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 5px;
+      font-size: .9rem;
+    }
+ 
+    .totals {
+      margin-top: 16px;
+      border-top: 1px solid #ccc;
+      padding-top: 12px;
+    }
+ 
+    .total-row {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 6px;
+    }
+ 
+    .total-row label { min-width: 80px; text-align: right; }
+    .total-row input { width: 110px; text-align: right; }
+ 
+    .btn-row { text-align: center; margin-top: 16px; }
+ 
+    input[type="submit"] {
+      padding: 7px 24px;
+      font-size: .95rem;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+ 
+  <header>
+    <h1>ROGER DEALERSHIP</h1>
+    <p>Your Trusted Tesla Dealer</p>
+  </header>
+ 
+  <div class="main-grid">
+ 
+    <!-- Product Info -->
+    <div class="product-info">
+      <h2>Tesla Model S Long Range AWD</h2>
+      <p>by <a href="#">Tesla, Inc.</a></p>
+      <p><span class="stars">★★★★★</span> Customer Rating (5,841 votes)</p>
+      <p>
+        The Tesla Model S is the pinnacle of electric vehicle engineering —
+        combining breathtaking performance with a 405-mile range on a single
+        charge. Features Autopilot, a 17" touchscreen, and over-the-air updates.
+        Available in Long Range AWD, Plaid, and Plaid+ trims.
+      </p>
+    </div>
+ 
+    <!-- Order Form -->
+    <div class="order-form">
+      <h2>Vehicle Order</h2>
+ 
+      <form id="form">
+        <!-- Model + Qty -->
+        <div class="row">
+          <label for="model">Model</label>
+          <select id="model" name="model">
+            <option value="74990">Model 3 ($74,990)</option>
+            <option value="89990" selected>Model S ($89,990)</option>
+            <option value="104990">Model S Plaid ($104,990)</option>
+          </select>
+ 
+          <label for="qty">Qty</label>
+          <select id="qty" name="qty">
+            <option value="1" selected>1</option>
+            <option value="2">2</option>
+            <option value="3">3</option>
+          </select>
+ 
+          <input type="text" id="modelCost" name="modelCost" readonly placeholder="$0.00" size="10"/>
+        </div>
+ 
+        <!-- Protection Plan -->
+        <div class="section-title">Protection Plan</div>
+ 
+        <div class="plan-option">
+          <input type="radio" name="plan" id="plan0" value="0" checked/>
+          <label for="plan0">No protection plan ($0.00)</label>
+        </div>
+        <div class="plan-option">
+          <input type="radio" name="plan" id="plan1" value="1495"/>
+          <label for="plan1">2-year protection plan ($1,495.00)</label>
+        </div>
+        <div class="plan-option">
+          <input type="radio" name="plan" id="plan2" value="2495"/>
+          <label for="plan2">4-year protection plan ($2,495.00)</label>
+        </div>
+        <div class="plan-option">
+          <input type="radio" name="plan" id="plan3" value="3495"/>
+          <label for="plan3">6-year protection plan ($3,495.00)</label>
+        </div>
+ 
+        <div class="row" style="margin-top:8px;">
+          <label>Plan Cost</label>
+          <input type="text" id="planCost" name="planCost" readonly placeholder="$0.00" size="10"/>
+        </div>
+ 
+        <!-- Totals -->
+        <div class="totals">
+          <div class="total-row">
+            <label>Subtotal</label>
+            <input type="text" id="subtotal" name="subtotal" readonly placeholder="$0.00"/>
+          </div>
+          <div class="total-row">
+            <label>Tax (5%)</label>
+            <input type="text" id="salesTax" name="salesTax" readonly placeholder="$0.00"/>
+          </div>
+          <div class="total-row">
+            <label>TOTAL</label>
+            <input type="text" id="totalCost" name="totalCost" readonly placeholder="$0.00"/>
+          </div>
+        </div>
+ 
+        <!-- Submit -->
+        <div class="btn-row">
+          <input type="submit" value="Add to Cart"/>
+        </div>
+ 
+      </form>
+    </div>
+ 
+  </div>
+ 
+</body>
